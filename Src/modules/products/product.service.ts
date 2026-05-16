@@ -45,10 +45,24 @@ export class productServices {
   }
 
   static async update(id: string, data: IProducts) {
-    const product = await Product.findByIdAndUpdate(id);
+    if (!id) {
+      throw new Error("ID is required ");
+    }
+    const product = await Product.findByIdAndUpdate(id, data);
     if (!product) {
       throw new Error("Product not found");
     }
     return await Product.findByIdAndUpdate(id, data);
+  }
+
+  static async delete(id: string) {
+    if (!id) {
+      throw new Error("ID is required ");
+    }
+    const product = await Product.findByIdAndDelete(id);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    return product;
   }
 }

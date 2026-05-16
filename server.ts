@@ -1,7 +1,6 @@
 import { config } from "./shared/config/config.ts";
 import { GracefullyShutDown } from "./shared/core/shutdown.ts";
 import { app } from "./app.ts";
-import { connectDB } from "./shared/core/database/db.ts";
 import { bootstrap } from "./shared/core/bootstrap/index.ts";
 
 const PORT = config.PORT;

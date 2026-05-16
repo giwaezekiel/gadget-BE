@@ -11,13 +11,13 @@ export class Redis {
   static async connect() {
     const conn = new Redis();
 
-    redis = createClient({ url: conn.conString()});
+    redis = createClient({ url: conn.conString() });
 
     try {
       redis.on("connect", () => {
-        console.log("=========================");
+        console.log("==================================");
         console.log("Redis connected");
-        console.log("=========================");
+        console.log("==================================");
       });
       await redis.connect();
       return redis;
