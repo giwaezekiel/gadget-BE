@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import type { Server } from "node:http";
+import { redis } from "./redis/redis";
 
 export class GracefullyShutDown {
   static async init(server: Server) {
@@ -11,6 +12,10 @@ export class GracefullyShutDown {
         //close db
         await mongoose.connection.close();
         console.log("Database dicconnected successfully");
+
+        //close redis
+        redis.quit();
+        console.log("Redis is Disconnected");
 
         console.log("Successfully Shut down all processes");
         process.exit(0);

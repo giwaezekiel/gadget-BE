@@ -1,7 +1,7 @@
-import { connectDB } from "./db";
+import { Database } from "./db";
 import { registerEvent } from "./event";
 
 export const initDB = async () => {
-  await connectDB();
+  await Database.connect();
   registerEvent();
 };

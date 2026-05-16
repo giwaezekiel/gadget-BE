@@ -26,10 +26,10 @@ const productSchama = new mongoose.Schema<IProducts>(
       required: [true, "product price is required"],
     },
     productImage: {
-      type: String,
+      type: [String],
     },
     productVarience: {
-      type: String,
+      type: [String],
     },
     productWarranty: {
       type: Number,

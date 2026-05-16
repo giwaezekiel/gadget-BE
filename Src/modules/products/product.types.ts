@@ -5,10 +5,10 @@ export interface IProducts extends Document {
   productName: String;
   productDesc: String;
   productBrand: String;
-  productRating: Number;
-  productReviews: String;
+  productRating?: Number;
+  productReviews?: String;
   productPrice: Number;
-  productImage: String;
-  productVarience: String;
+  productImage?: [String];
+  productVarience?: [String];
   productWarranty: Number;
 }
