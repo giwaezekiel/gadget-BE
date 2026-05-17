@@ -25,7 +25,7 @@ const productSchama = new mongoose.Schema<IProducts>(
       type: Number,
       required: [true, "product price is required"],
     },
-    productImage: {
+    productImages: {
       type: [String],
     },
     productVarience: {

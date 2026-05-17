@@ -1,3 +1,4 @@
+import { uploadToCloudinary } from "../../../shared/core/cloudinary/cloudinary.service";
 import { redis } from "../../../shared/core/redis/redis";
 import { productServices } from "./product.service";
 import { NextFunction, Request, Response } from "express";
@@ -8,10 +9,17 @@ export class productController {
       const data = req.body;
       await productServices.create(data);
       await redis.del("products:all");
+      const file = req.file as Express.Multer.File;
+
+      const result = await uploadToCloudinary(file);
       res.status(201).json({
         ...data,
         success: true,
         message: "product created successfully",
+        productImages: {
+          imageUrl: result?.secure_url,
+          publicId: result.public_id,
+        },
       });
     } catch (error) {
       next(error);

@@ -12,6 +12,7 @@ export class productServices {
       productRating,
       productReviews,
       productWarranty,
+      productImages,
     } = data;
 
     productValidator(data);
@@ -24,6 +25,7 @@ export class productServices {
       productRating,
       productReviews,
       productWarranty,
+      productImages,
     });
     return newProduct;
   }

@@ -8,7 +8,7 @@ export interface IProducts extends Document {
   productRating?: Number;
   productReviews?: String;
   productPrice: Number;
-  productImage?: [String];
+  productImages?: [String];
   productVarience?: [String];
   productWarranty: Number;
 }

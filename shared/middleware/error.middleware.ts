@@ -8,7 +8,8 @@ export const errorMiddleware = (
   next: NextFunction,
 ) => {
   let message = err.message;
-  let stack = config.NODE_ENV == "development" ? err.stack : "An error occured";
+  let stack =
+    config.NODE_ENV === "Development" ? err?.stack : "An error occured";
   let method = req.method;
   let statusCode = err.status || 500;
 
