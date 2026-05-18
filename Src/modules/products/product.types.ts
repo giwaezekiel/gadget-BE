@@ -1,4 +1,4 @@
-import { Document, Types } from "mongoose";
+import { Document, Schema, Types } from "mongoose";
 
 export interface IProducts extends Document {
   _id: Types.ObjectId;
@@ -11,4 +11,5 @@ export interface IProducts extends Document {
   productImages?: [String];
   productVarience?: [String];
   productWarranty: Number;
+  productCategory: Schema.Types.ObjectId;
 }

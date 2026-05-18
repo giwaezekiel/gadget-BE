@@ -1,7 +1,9 @@
 import { Model } from "mongoose";
 import { Product } from "./product.model";
 import { IProducts } from "./product.types";
-import { productValidator } from "./product.validation";
+import { schema } from "./product.validation";
+import e from "express";
+// import { productValidator } from "./product.validation";
 
 export class productServices {
   constructor(private model: Model<IProducts>) {}
@@ -17,7 +19,11 @@ export class productServices {
       productImages,
     } = data;
 
-    productValidator(data);
+    // productValidator
+    const { error } = schema.validate(data);
+    if (error) {
+      throw new Error(error?.message);
+    }
 
     const newProduct = await this.model.create({
       productName,

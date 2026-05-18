@@ -11,12 +11,17 @@ const productSchama = new mongoose.Schema<IProducts>(
       type: String,
       required: [true, "product Description is required"],
     },
+    productCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+    },
     productBrand: {
       type: String,
       required: [true, "product Brand is required"],
     },
     productRating: {
       type: Number,
+      default: 0.0,
     },
     productReviews: {
       type: String,
