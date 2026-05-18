@@ -1,9 +1,11 @@
+import { Model } from "mongoose";
 import { Product } from "./product.model";
 import { IProducts } from "./product.types";
 import { productValidator } from "./product.validation";
 
 export class productServices {
-  static async create(data: IProducts) {
+  constructor(private model: Model<IProducts>) {}
+  create = async (data: IProducts) => {
     const {
       productName,
       productDesc,
@@ -17,7 +19,7 @@ export class productServices {
 
     productValidator(data);
 
-    const newProduct = await Product.create({
+    const newProduct = await this.model.create({
       productName,
       productDesc,
       productBrand,
@@ -28,15 +30,15 @@ export class productServices {
       productImages,
     });
     return newProduct;
-  }
+  };
 
-  static async find() {
-    const product = await Product.find();
+  find = async () => {
+    const product = await this.model.find();
     return product;
-  }
+  };
 
-  static async findById(id: string) {
-    const product = await Product.findById(id);
+  findById = async (id: string) => {
+    const product = await this.model.findById(id);
     if (!id) {
       throw new Error("ID is Required");
     }
@@ -44,27 +46,26 @@ export class productServices {
       throw new Error("Product with this ID not available");
     }
     return product;
-  }
+  };
 
-  static async update(id: string, data: IProducts) {
+  update = async (id: string, data: IProducts) => {
     if (!id) {
       throw new Error("ID is required ");
     }
-    const product = await Product.findByIdAndUpdate(id, data);
-    if (!product) {
-      throw new Error("Product not found");
-    }
-    return await Product.findByIdAndUpdate(id, data);
-  }
-
-  static async delete(id: string) {
-    if (!id) {
-      throw new Error("ID is required ");
-    }
-    const product = await Product.findByIdAndDelete(id);
+    const product = await this.model.findByIdAndUpdate(id, data);
     if (!product) {
       throw new Error("Product not found");
     }
     return product;
-  }
+  };
+  delete = async (id: string) => {
+    if (!id) {
+      throw new Error("ID is required ");
+    }
+    const product = await this.model.findByIdAndDelete(id);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    return product;
+  };
 }

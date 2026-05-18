@@ -1,31 +1,46 @@
-import { uploadToCloudinary } from "../../../shared/core/cloudinary/cloudinary.service";
+import { uploadToCloudinary } from "../../../shared/core/cloudinary/uploadToCloudinary";
 import { redis } from "../../../shared/core/redis/redis";
 import { productServices } from "./product.service";
 import { NextFunction, Request, Response } from "express";
 
 export class productController {
-  static async create(req: Request, res: Response, next: NextFunction) {
-    try {
-      const data = req.body;
-      await productServices.create(data);
-      await redis.del("products:all");
-      const file = req.file as Express.Multer.File;
+  constructor(private service: productServices) {}
 
-      const result = await uploadToCloudinary(file);
+  create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await redis.del("products:all");
+
+      const files = req.files as Express.Multer.File[];
+      let imageUrl: string[] = [];
+      if (!files) {
+        res.status(400).json({
+          success: false,
+          message: "No file is uploaded",
+        });
+        return;
+      }
+
+      if (files && files.length > 0) {
+        const uploadProm = files.map((file) => uploadToCloudinary(file));
+        imageUrl = await Promise.all(uploadProm);
+      }
+
+      const data = {
+        ...req.body,
+        productImages: imageUrl,
+      };
+      const product = await this.service.create(data);
+
       res.status(201).json({
-        ...data,
         success: true,
         message: "product created successfully",
-        productImages: {
-          imageUrl: result?.secure_url,
-          publicId: result.public_id,
-        },
+        product,
       });
     } catch (error) {
       next(error);
     }
-  }
-  static async find(req: Request, res: Response, next: NextFunction) {
+  };
+  find = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // getting the cache key
       const cacheKey = "products:all";
@@ -42,7 +57,7 @@ export class productController {
         });
       }
       //fetch all data
-      const product = await productServices.find();
+      const product = await this.service.find();
 
       /**
        * If there's no cache product
@@ -63,9 +78,9 @@ export class productController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async findById(req: Request, res: Response, next: NextFunction) {
+  findById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req?.params;
       const cacheKey = `products:${id}`;
@@ -77,23 +92,23 @@ export class productController {
         });
       }
       // fetch data by id
-      const data = await productServices.findById(id as string);
+      const product = await this.service.findById(id as string);
 
       // return output
       res.status(200).json({
         success: true,
-        data,
+        product,
       });
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async update(req: Request, res: Response, next: NextFunction) {
+  update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req?.params;
       const data = req.body;
-      const product = await productServices.update(id as string, data);
+      const product = await this.service.update(id as string, data);
 
       await redis.del("products:all");
       await redis.del(`products:${id}`);
@@ -106,15 +121,15 @@ export class productController {
     } catch (error) {
       next(error);
     }
-  }
-  static async delete(req: Request, res: Response, next: NextFunction) {
+  };
+  delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req?.params;
 
       await redis.del("products:all");
       await redis.del(`products:${id}`);
 
-      await productServices.delete(id as string);
+      await this.service.delete(id as string);
       res.status(200).json({
         success: true,
         message: "product Deleted Successfully",
@@ -122,5 +137,5 @@ export class productController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
