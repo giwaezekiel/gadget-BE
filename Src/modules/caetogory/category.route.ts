@@ -10,3 +10,5 @@ const controller = new categoryController(service);
 categoryRouter.post("/", controller.create);
 categoryRouter.get("/", controller.find);
 categoryRouter.get("/:id", controller.findById);
+categoryRouter.patch("/:id", controller.update);
+categoryRouter.delete("/:id", controller.delete);

@@ -45,7 +45,7 @@ export class productController {
     try {
       // getting the cache key
       const cacheKey = "products:all";
-      //   using the cache key to get the cacehd products
+      //   using the cache key to get the cached products
       const cachedProducts = await redis.get(cacheKey);
 
       // if there's products in the cache
@@ -131,6 +131,7 @@ export class productController {
       await redis.del(`products:${id}`);
 
       await this.service.delete(id as string);
+
       res.status(200).json({
         success: true,
         message: "product Deleted Successfully",

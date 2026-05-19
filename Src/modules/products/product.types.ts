@@ -2,14 +2,14 @@ import { Document, Schema, Types } from "mongoose";
 
 export interface IProducts extends Document {
   _id: Types.ObjectId;
-  productName: String;
-  productDesc: String;
-  productBrand: String;
+  productName: string;
+  productDesc: string;
+  productBrand: string;
   productRating?: Number;
-  productReviews?: String;
+  productReviews?: string;
   productPrice: Number;
-  productImages?: [String];
-  productVarience?: [String];
+  productImages?: [string];
+  productVarience?: [string];
   productWarranty: Number;
   productCategory: Schema.Types.ObjectId;
 }

@@ -13,7 +13,7 @@ const productSchama = new mongoose.Schema<IProducts>(
     },
     productCategory: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "category",
     },
     productBrand: {
       type: String,

@@ -1,47 +1,32 @@
 import { Model } from "mongoose";
-// import { Product } from "./product.model";
 import { IProducts } from "./product.types";
 import { schema } from "./product.validation";
-import e from "express";
-// import { productValidator } from "./product.validation";
 
 export class productServices {
   constructor(private model: Model<IProducts>) {}
   create = async (data: IProducts) => {
-    const {
-      productName,
-      productDesc,
-      productBrand,
-      productPrice,
-      productRating,
-      productReviews,
-      productWarranty,
-      productImages,
-      productCategory,
-    } = data;
-
     // productValidator
     const { error } = schema.validate(data);
     if (error) {
       throw new Error(error?.message);
     }
 
-    const newProduct = await this.model.create({
-      productName,
-      productDesc,
-      productBrand,
-      productPrice,
-      productRating,
-      productReviews,
-      productWarranty,
-      productImages,
-      productCategory,
-    });
+    const newProduct = await this.model.create(data);
     return newProduct;
   };
 
   find = async () => {
-    const product = await this.model.find();
+    const product = await this.model
+      .find()
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "productCategory",
+        select: "_id name parentCategory",
+        populate: {
+          path: "parentCategory",
+          select: "_id name parentCategory",
+        },
+      });
     return product;
   };
 
@@ -64,7 +49,7 @@ export class productServices {
     if (!product) {
       throw new Error("Product not found");
     }
-    return product;
+    return;
   };
   delete = async (id: string) => {
     if (!id) {

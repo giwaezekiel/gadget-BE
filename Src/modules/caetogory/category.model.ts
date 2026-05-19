@@ -7,25 +7,18 @@ const categorySchema = new mongoose.Schema<ICategory>(
       type: String,
       required: [true, "Name is required"],
     },
-    // desc: {
-    //   type: String,
-    //   required: [true, "Description is required"],
-    // },
-    // parentCategory: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "catogory",
-    // },
+    desc: {
+      type: String,
+    },
+    parentCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+      default: null,
+    },
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   },
 );
-categorySchema.virtual("products", {
-  ref: "product",
-  localField: "_id",
-  foreignField: "category",
-});
 
-export const Category = mongoose.model<ICategory>("Category", categorySchema);
+export const Category = mongoose.model<ICategory>("category", categorySchema);
