@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { Product } from "./product.model";
+// import { Product } from "./product.model";
 import { IProducts } from "./product.types";
 import { schema } from "./product.validation";
 import e from "express";
@@ -17,6 +17,7 @@ export class productServices {
       productReviews,
       productWarranty,
       productImages,
+      productCategory,
     } = data;
 
     // productValidator
@@ -34,6 +35,7 @@ export class productServices {
       productReviews,
       productWarranty,
       productImages,
+      productCategory,
     });
     return newProduct;
   };

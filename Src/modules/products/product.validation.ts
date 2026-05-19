@@ -9,4 +9,5 @@ export const schema = Joi.object({
   productPrice: Joi.number().required(),
   productImages: Joi.array().items(Joi.string().uri()),
   productWarranty: Joi.number().required(),
+  productCategory: Joi.string().hex().length(24).required(),
 });

@@ -2,6 +2,7 @@ import { uploadToCloudinary } from "../../../shared/core/cloudinary/uploadToClou
 import { redis } from "../../../shared/core/redis/redis";
 import { productServices } from "./product.service";
 import { NextFunction, Request, Response } from "express";
+import { Multer } from "multer";
 
 export class productController {
   constructor(private service: productServices) {}
