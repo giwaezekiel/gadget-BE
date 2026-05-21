@@ -49,7 +49,7 @@ export class productServices {
     if (!product) {
       throw new Error("Product not found");
     }
-    return;
+    return product;
   };
   delete = async (id: string) => {
     if (!id) {

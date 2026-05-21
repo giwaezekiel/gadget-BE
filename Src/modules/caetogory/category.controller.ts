@@ -58,46 +58,58 @@ export class categoryController {
     }
   };
   findById = async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req?.params;
-    const cacheKey = `category:${id}`;
-    const cachedCategory = await redis.get(cacheKey);
-    if (cachedCategory) {
+    try {
+      const { id } = req?.params;
+      const cacheKey = `category:${id}`;
+      const cachedCategory = await redis.get(cacheKey);
+      if (cachedCategory) {
+        res.status(200).json({
+          success: true,
+          category: JSON.parse(cachedCategory),
+        });
+      }
+      const category = await this.service.findById(id as string);
       res.status(200).json({
         success: true,
-        category: JSON.parse(cachedCategory),
+        category,
       });
+    } catch (error) {
+      next(error);
     }
-    const category = await this.service.findById(id as string);
-    res.status(200).json({
-      success: true,
-      category,
-    });
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req?.params;
-    const data = req.body;
-    const category = await this.service.update(id as string, data);
+    try {
+      const { id } = req?.params;
+      const data = req.body;
+      const category = await this.service.update(id as string, data);
 
-    await redis.del("category:all");
-    await redis.del(`category:${id}`);
+      await redis.del("category:all");
+      await redis.del(`category:${id}`);
 
-    res.status(200).json({
-      success: true,
-      message: "category Updated Successfully",
-      category,
-    });
+      res.status(200).json({
+        success: true,
+        message: "category Updated Successfully",
+        category,
+      });
+    } catch (error) {
+      next(error);
+    }
   };
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req?.params;
+    try {
+      const { id } = req?.params;
 
-    await redis.del("category:all");
-    await redis.del(`category:${id}`);
+      await redis.del("category:all");
+      await redis.del(`category:${id}`);
 
-    await this.service.delete(id as string);
-    res.status(200).json({
-      succuss: true,
-      message: "Category deleted Successfully",
-    });
+      await this.service.delete(id as string);
+      res.status(200).json({
+        succuss: true,
+        message: "Category deleted Successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
   };
 }

@@ -108,7 +108,26 @@ export class productController {
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req?.params;
-      const data = req.body;
+
+      const files = req.files as Express.Multer.File[];
+      let imageUrl: string[] = [];
+      if (!files) {
+        res.status(400).json({
+          success: false,
+          message: "No file is uploaded",
+        });
+        return;
+      }
+
+      if (files && files.length > 0) {
+        const uploadProm = files.map((file) => uploadToCloudinary(file));
+        imageUrl = await Promise.all(uploadProm);
+      }
+
+      const data = {
+        ...req?.body,
+        productImages: imageUrl,
+      };
       const product = await this.service.update(id as string, data);
 
       await redis.del("products:all");

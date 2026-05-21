@@ -38,7 +38,7 @@ export class categoryService {
       throw new Error("category not found");
     }
 
-    return;
+    return category;
   };
   delete = async (id: string) => {
     const category = await this.model.findByIdAndDelete(id);

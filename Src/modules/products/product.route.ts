@@ -12,5 +12,9 @@ const controller = new productController(service);
 productRouter.post("/", upload.array("productImages", 4), controller.create);
 productRouter.get("/", controller.find);
 productRouter.get("/:id", controller.findById);
-productRouter.patch("/:id", controller.update);
+productRouter.patch(
+  "/:id",
+  upload.array("productImages", 4),
+  controller.update,
+);
 productRouter.delete("/:id", controller.delete);
