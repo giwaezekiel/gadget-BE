@@ -46,4 +46,8 @@ export class authService {
     }
     return;
   };
+  verify = async (data: IAuth) => {
+    const user = await this.model.findOneAndUpdate({ email: data?.email });
+    return user;
+  };
 }

@@ -6,4 +6,6 @@ export const config = {
   DB_URI: process.env.DB_URI,
   NODE_ENV: process.env.NODE_ENV,
   REDIS_URI: process.env.REDIS_URI,
+  EMAIL_NAME: process.env.EMAIL_USER,
+  EMAIL_PASS: process.env.EMAIL_PASS,
 };

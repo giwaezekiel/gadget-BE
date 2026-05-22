@@ -5,4 +5,5 @@ export interface IAuth extends Document {
   email: string;
   image?: string;
   password: string;
+  isVerified?: boolean;
 }

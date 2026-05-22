@@ -8,3 +8,4 @@ const service = new authService(Auth);
 const controller = new authController(service);
 
 authRouter.post("/", controller.signUp);
+authRouter.patch("/verify", controller.verify);

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { IAuth } from "./auth.types";
+import { boolean } from "joi";
 
 const authSchema = new mongoose.Schema<IAuth>(
   {
@@ -17,6 +18,10 @@ const authSchema = new mongoose.Schema<IAuth>(
     password: {
       type: String,
       required: [true, "Password is Required"],
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true },
