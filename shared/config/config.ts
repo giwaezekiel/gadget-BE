@@ -8,4 +8,6 @@ export const config = {
   REDIS_URI: process.env.REDIS_URI,
   EMAIL_NAME: process.env.EMAIL_USER,
   EMAIL_PASS: process.env.EMAIL_PASS,
+  JWT_SECRET: process.env.JWT_SECRET,
+  EXPIRES_IN: process.env.EXPIRES_IN,
 };

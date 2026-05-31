@@ -1,16 +1,19 @@
 import mongoose, { Model } from "mongoose";
 import { IAuth } from "./auth.types";
 import bcrypt from "bcrypt";
-import { schema } from "./auth.validation";
+import jwt from "jsonwebtoken";
+import { authSchema } from "./auth.validation";
+import { config } from "../../../shared/config/config";
 
 export class authService {
   constructor(private model: Model<IAuth>) {}
   signUp = async (data: IAuth) => {
-    //check if user exists
-    const { error } = schema.validate(data);
+    //validate user inputs
+    const { error } = authSchema.validate(data);
     if (error) {
       throw new Error(error?.message);
     }
+    // check if user exists
     const userExist = await this.model.findOne({ email: data?.email });
     if (userExist) {
       throw new Error("Incorrect credentials");
@@ -30,24 +33,41 @@ export class authService {
   };
   signIn = async (data: IAuth) => {
     // validate input
-    const { error } = schema.validate(data);
+    const { error } = authSchema.validate(data);
     if (error) {
       throw new Error(error?.message);
     }
     //check if user exists
     const userExist = await this.model.findOne({ email: data?.email });
     if (!userExist) {
-      throw new Error("Incorrect credential");
+      throw new Error("Incorrect credentials");
     }
-    //compare input from db password
-    const compare = bcrypt.compare(data?.password, userExist?.password);
-    if (!compare) {
-      throw new Error("Incorrect credentilas");
+    //check if user is verified
+    const verify = userExist?.isVerified;
+    if (verify === true) {
+      //compare input from db password
+      const compare = bcrypt.compare(data?.password, userExist?.password);
+      if (!compare) {
+        throw new Error("Incorrect credentials");
+      }
+    } else {
+      throw new Error("User is not  verified");
     }
     return;
   };
   verify = async (data: IAuth) => {
     const user = await this.model.findOneAndUpdate({ email: data?.email });
     return user;
+  };
+  payload = async (data: IAuth) => {
+    const exists = await this.model.findOne({ email: data?.email });
+    // token generation
+    const payload = {
+      email: exists?.email,
+      name: exists?.name,
+    };
+    return jwt.sign(payload, config.JWT_SECRET, {
+      expiresIn: config.EXPIRES_IN,
+    });
   };
 }

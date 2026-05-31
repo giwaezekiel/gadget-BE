@@ -14,6 +14,7 @@ export const transporter = nodemailer.createTransport({
 export const generateOTP = (length = 6): string => {
   const min = 10 ** (length - 1);
   const max = 10 ** length - 1;
-
+  console.log(min);
+  console.log(max);
   return crypto.randomInt(min, max).toString();
 };

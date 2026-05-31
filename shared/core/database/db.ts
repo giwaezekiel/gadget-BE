@@ -9,13 +9,15 @@ export class Database {
   static async connect() {
     try {
       const connect = new Database();
-      const conn = await mongoose.connect(connect.conString());
-      console.log(
-        `🎃 Database Connected Successfully: ${conn?.connection?.host}`,
-      );
-      console.log(
-        `🎃 Database connected to: ${conn?.connection?.db?.databaseName}`,
-      );
+      if (config.NODE_ENV === "Development") {
+        const conn = await mongoose.connect(connect.conString());
+        console.log(
+          `🎃 Database Connected Successfully: ${conn?.connection?.host}`,
+        );
+        console.log(
+          `🎃 Database connected to: ${conn?.connection?.db?.databaseName}`,
+        );
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.error({

@@ -1,7 +1,7 @@
 import { config } from "../shared/config/config";
 import { transporter } from "../shared/config/mailer";
 
-export const sendOTP = async (email: string, OTP: string) => {
+export const sendOTP = async (email: string, OTP: string, name: string) => {
   await transporter.sendMail({
     from: config.EMAIL_NAME,
     to: email,
@@ -9,6 +9,7 @@ export const sendOTP = async (email: string, OTP: string) => {
     html: `
       <div style="font-family: sans-serif">
         <h2>Email Verification</h2>
+        <>Hello,${name}<>
         <p>Your OTP is:</p>
         <h1>${OTP}</h1>
         <p>This OTP expires in 5 minutes.</p>
