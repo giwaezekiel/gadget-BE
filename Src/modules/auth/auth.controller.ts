@@ -5,6 +5,8 @@ import { generateOTP } from "../../../shared/config/mailer";
 import bcrypt from "bcrypt";
 import { sendOTP } from "../../../utils/sendOTP";
 import { authSchema } from "./auth.validation";
+import { Auth } from "./auth.model";
+import { error } from "node:console";
 
 export class authController {
   constructor(private service: authService) {}
@@ -43,21 +45,34 @@ export class authController {
     try {
       const data = req.body;
 
+      //get data from db
+      const user = await Auth.findOne({ email: data?.email });
+
       //get hashed OTP and check expire
       const hashedOTP = await redis.get(`OTP${data?.email}`);
 
-      if (!hashedOTP) {
-        throw new Error("OTP expired");
+      if (hashedOTP) {
+        //compare hashed OTP and input
+        const compare = await bcrypt.compare(data?.OTP, hashedOTP);
+        if (compare) {
+          await this.service.verify(data?.email, true);
+          res.status(200).json({
+            // email: user?.email,
+          });
+        }
+        throw new Error("Invalid OTP");
       }
-      //compare hashed OTP and input
-      const compare = await bcrypt.compare(data?.OTP, hashedOTP);
-      if (compare) {
-        const user = await this.service.verify(data?.email);
-        res.status(200).json({
-          email: user?.email, 
-          isVerified: true,
-        });
-      }
+      //send OTP
+      const OTP = generateOTP();
+      const hashOTP = await bcrypt.hash(OTP, 10);
+      await sendOTP(user?.email as string, OTP, user?.name as string);
+
+      // save to cache
+      await redis.set(`OTP${data?.email}`, hashOTP, { EX: 300 });
+      res.status(200).json({
+        success: true,
+        message: "OTP sent successfully",
+      });
     } catch (error) {
       next(error);
     }

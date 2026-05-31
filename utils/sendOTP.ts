@@ -9,7 +9,7 @@ export const sendOTP = async (email: string, OTP: string, name: string) => {
     html: `
       <div style="font-family: sans-serif">
         <h2>Email Verification</h2>
-        <>Hello,${name}<>
+        <h3>Hello, ${name}</h3>
         <p>Your OTP is:</p>
         <h1>${OTP}</h1>
         <p>This OTP expires in 5 minutes.</p>

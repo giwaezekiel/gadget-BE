@@ -55,8 +55,12 @@ export class authService {
     }
     return;
   };
-  verify = async (data: IAuth) => {
-    const user = await this.model.findOneAndUpdate({ email: data?.email });
+  verify = async (data: IAuth, verify: boolean) => {
+    const { isVerified } = data;
+    const user = await this.model.findOneAndUpdate(
+      { email: data?.email },
+      { isVerified: verify },
+    );
     return user;
   };
   payload = async (data: IAuth) => {
@@ -67,7 +71,7 @@ export class authService {
       name: exists?.name,
     };
     return jwt.sign(payload, config.JWT_SECRET, {
-      expiresIn: config.EXPIRES_IN,
+      expiresIn: config.EXPIRES_IN as jwt.SignOptions["expiresIn"],
     });
   };
 }

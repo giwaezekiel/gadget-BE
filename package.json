@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/streamifier": "^0.1.2",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
